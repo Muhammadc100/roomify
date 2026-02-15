@@ -26,7 +26,7 @@ export default function Home() {
       id: newId,
       name,
       sourceImage: base64Image,
-      renderImage: undefined,
+      renderedImage: undefined,
       timestamp: Date.now(),
     };
 
@@ -37,7 +37,7 @@ export default function Home() {
       return false;
     }
 
-    setProjects((prev) => [newItem, ...prev]);
+    setProjects((prev) => [saved, ...prev]);
 
     navigate(`/visualizer/${newId}`, {
       state: {
