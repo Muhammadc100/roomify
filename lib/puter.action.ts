@@ -138,3 +138,65 @@ export const getProjectById = async ({ id }: { id: string }) => {
         return null;
     }
 };
+
+export const shareProject = async ({ projectId }: { projectId: string }) => {
+    if (!PUTER_WORKER_URL) {
+        console.warn("Missing VITE_PUTER_WORKER_URL: skip project share");
+        return null;
+    }
+
+    try {
+        const response = await puter.workers.exec(
+            `${PUTER_WORKER_URL}/api/projects/share`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ projectId }),
+            },
+        );
+
+        if (!response.ok) {
+            console.error("Failed to share project:", await response.text());
+            return null;
+        }
+
+        const data = (await response.json()) as { project?: DesignItem | null };
+        return data?.project ?? null;
+    } catch (error) {
+        console.error("Failed to share project:", error);
+        return null;
+    }
+};
+
+export const unshareProject = async ({ projectId }: { projectId: string }) => {
+    if (!PUTER_WORKER_URL) {
+        console.warn("Missing VITE_PUTER_WORKER_URL: skip project unshare");
+        return null;
+    }
+
+    try {
+        const response = await puter.workers.exec(
+            `${PUTER_WORKER_URL}/api/projects/unshare`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ projectId }),
+            },
+        );
+
+        if (!response.ok) {
+            console.error("Failed to unshare project:", await response.text());
+            return null;
+        }
+
+        const data = (await response.json()) as { project?: DesignItem | null };
+        return data?.project ?? null;
+    } catch (error) {
+        console.error("Failed to unshare project:", error);
+        return null;
+    }
+};
