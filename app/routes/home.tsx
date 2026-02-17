@@ -63,11 +63,18 @@ export default function Home() {
   useEffect(() => {
     const fetchProjects = async () => {
       const items = await getProjects();
-
       setProjects(items)
     }
 
     fetchProjects();
+
+    // Refetch projects when page regains focus (user returns from visualizer)
+    const handleFocus = () => {
+      fetchProjects();
+    };
+
+    window.addEventListener("focus", handleFocus);
+    return () => window.removeEventListener("focus", handleFocus);
   }, [])
   
 
